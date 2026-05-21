@@ -1,0 +1,3 @@
+SELECT * FROM prison_person WHERE prontuario IN ('MJDHC-A-00223808', 'MJDHC-A-00215250', 'MJDHC-A-00172340');
+
+UPDATE prison_person SET center_id = NULL WHERE prontuario IN ('MJDHC-A-00223808', 'MJDHC-A-00215250', 'MJDHC-A-00172340');

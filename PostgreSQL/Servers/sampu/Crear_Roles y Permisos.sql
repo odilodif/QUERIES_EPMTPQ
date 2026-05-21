@@ -1,0 +1,11 @@
+ALTER USER desarrollo PASSWORD 'D3s@rr0ll0*2023';
+
+GRANT CONNECT ON DATABASE sgp TO desarrollo;
+GRANT USAGE ON SCHEMA public TO desarrollo;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO desarrollo;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO desarrollo;
+
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO desarrollo;
+
+
+ALTER ROLE "desarrollo" WITH LOGIN;

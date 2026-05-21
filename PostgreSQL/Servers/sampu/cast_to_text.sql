@@ -1,0 +1,1 @@
+SELECT  lpad(max(trasl_id) ::text, 5, '00')   FROM traslation_head;

@@ -1,0 +1,190 @@
+DO $f$
+DECLARE
+    _date_inq date;
+    _yearsq INT;
+		_monthsq INT;
+		_daysq INT;		
+		_prontuarioq TEXT;
+		_number_dtq  TEXT;
+		_name_pplq VARCHAR;
+		_last_name_pplq VARCHAR;
+		_name_crsq  TEXT;
+		_crs_idq int;  
+		_query TEXT;
+		
+		
+		_days_calcule_now INT;
+		_years_to_days int;
+		_months_to_days int;
+		_days_to_days int;
+		_total_days_judgment INT;
+		_porcent FLOAT;
+		_crs_id int;
+		
+BEGIN
+_years_to_days=0;
+_months_to_days=0;
+_days_to_days=0;
+_crs_id= 10744;
+TRUNCATE TABLE porcentaje_cumplido;
+
+_query= 'SELECT * FROM detention_all ORDER BY 5 DESC'; 
+	FOR _date_inq, _yearsq, _monthsq, _daysq, _prontuarioq, _name_pplq,_last_name_pplq, _number_dtq, _name_crsq,_crs_idq   IN EXECUTE _query LOOP
+					BEGIN
+					
+					_days_calcule_now= (SELECT get_judicial_year_now(_date_inq));
+
+						IF _yearsq > 0 THEN
+							_years_to_days =(SELECT years_to_days_judicial(_yearsq));							
+							
+						END IF;
+						IF _monthsq > 0 THEN							
+							_months_to_days=(SELECT months_to_days(_monthsq));
+						END IF;
+						_days_to_days=_daysq;
+					END;
+					_total_days_judgment=_years_to_days+_months_to_days+_days_to_days;
+					_porcent=   CAST(_days_calcule_now*100 AS FLOAT)/_total_days_judgment;
+					
+					--RAISE NOTICE 'procesando % -> % -> % -> % -> %' , _yearsq , _monthsq, _years_to_days, _months_to_days, _number_dtq  ;
+					INSERT INTO porcentaje_cumplido (porcent_cumplido,dias_a_la_fecha,total_dias_judiciales_impuestos,prontuario,name_ppl, last_name_ppl,numero_detencion,nombre_crs,fecha_in) VALUES(_porcent,_days_calcule_now,_total_days_judgment,_prontuarioq,_name_pplq,_last_name_pplq,_number_dtq,_name_crsq,_date_inq);				
+					_years_to_days=0; 
+					_months_to_days=0;
+					_days_to_days=0;
+			END LOOP;		
+
+END;
+$f$
+
+/*SELECT round( CAST(float8 '3.1415927' as numeric), 2)  || '%',	dias_a_la_fecha	total_dias_judiciales_impuestos,	prontuario,	name_ppl	last_name_ppl,	numero_detencion,	nombre_crs,	fecha_in FROM porcentaje_cumplido;
+
+
+SELECT round( CAST(float8 '3.1415927' as numeric), 2) 
+
+
+SELECT round( CAST(float8 '3.1415927' as numeric), 2),	fecha_in FROM porcentaje_cumplido;*/
+
+
+
+SELECT round( CAST(float8 (porcent_cumplido::numeric)::text  as numeric), 2)  || '%' AS Cumplido, dias_a_la_fecha,	total_dias_judiciales_impuestos,	prontuario,	name_ppl,	last_name_ppl,	numero_detencion,	nombre_crs,	fecha_in FROM porcentaje_cumplido  ORDER BY 4 DESC;
+
+SELECT * FROM porcentaje_cumplido  ORDER BY 4 DESC;
+
+--SELECT * from prison_detention WHERE "number" = 'MJDHC-DET-00180800'
+--DROP function f_calcule_porcentage_allppl_and_get_table(integer);
+CREATE OR REPLACE FUNCTION f_calcule_porcentage_allppl_and_get_table(crs_id  INT DEFAULT 0)
+RETURNS SETOF  porcentaje_cumplido AS $BODY$
+	DECLARE 
+		_date_inq date;
+    _yearsq INT;
+		_monthsq INT;
+		_daysq INT;		
+		_prontuarioq TEXT;
+		_number_dtq  TEXT;
+		_name_pplq VARCHAR;
+		_last_name_pplq VARCHAR;
+		_name_crsq  TEXT;
+		_crs_idq int;  
+		_query TEXT;
+		
+		
+		_days_calcule_now INT;
+		_years_to_days int;
+		_months_to_days int;
+		_days_to_days int;
+		_total_days_judgment INT;
+		_porcent FLOAT;
+		_crs_id int;
+BEGIN
+_years_to_days=0;
+_months_to_days=0;
+_days_to_days=0;
+_crs_id= crs_id;
+TRUNCATE TABLE porcentaje_cumplido;
+
+
+IF _crs_id = 0 THEN
+_query= 'SELECT * FROM detention_all ORDER BY 5 DESC'; 
+			FOR _date_inq, _yearsq, _monthsq, _daysq, _prontuarioq, _name_pplq,_last_name_pplq, _number_dtq, _name_crsq,_crs_idq   IN EXECUTE _query LOOP
+					BEGIN
+					
+					_days_calcule_now= (SELECT get_judicial_year_now(_date_inq));
+
+						IF _yearsq > 0 THEN
+							_years_to_days =(SELECT years_to_days_judicial(_yearsq));							
+							
+						END IF;
+						IF _monthsq > 0 THEN							
+							_months_to_days=(SELECT months_to_days(_monthsq));
+						END IF;
+						_days_to_days=_daysq;
+					END;
+					_total_days_judgment=_years_to_days+_months_to_days+_days_to_days;
+					_porcent=   CAST(_days_calcule_now*100 AS FLOAT)/_total_days_judgment;
+					
+					--RAISE NOTICE 'procesando % -> % -> % -> % -> %' , _yearsq , _monthsq, _years_to_days, _months_to_days, _number_dtq  ;
+					INSERT INTO porcentaje_cumplido (porcent_cumplido,dias_a_la_fecha,total_dias_judiciales_impuestos,prontuario,name_ppl, last_name_ppl,numero_detencion,nombre_crs,fecha_in) VALUES(_porcent,_days_calcule_now,_total_days_judgment,_prontuarioq,_name_pplq,_last_name_pplq,_number_dtq,_name_crsq,_date_inq);				
+					_years_to_days=0; 
+					_months_to_days=0;
+					_days_to_days=0;
+		
+			END LOOP;
+	RETURN QUERY SELECT * FROM porcentaje_cumplido;
+
+	ELSE
+_query= 'SELECT * FROM detention_all WHERE crs_id=' || _crs_id ; 
+	FOR _date_inq, _yearsq, _monthsq, _daysq, _prontuarioq, _name_pplq,_last_name_pplq, _number_dtq, _name_crsq,_crs_idq   IN EXECUTE _query LOOP
+					BEGIN
+					
+					_days_calcule_now= (SELECT get_judicial_year_now(_date_inq));
+
+						IF _yearsq > 0 THEN
+							_years_to_days =(SELECT years_to_days_judicial(_yearsq));							
+							
+						END IF;
+						IF _monthsq > 0 THEN							
+							_months_to_days=(SELECT months_to_days(_monthsq));
+						END IF;
+						_days_to_days=_daysq;
+					END;
+					_total_days_judgment=_years_to_days+_months_to_days+_days_to_days;
+					_porcent=   CAST(_days_calcule_now*100 AS FLOAT)/_total_days_judgment;
+					
+					--RAISE NOTICE 'procesando % -> % -> % -> % -> %' , _yearsq , _monthsq, _years_to_days, _months_to_days, _number_dtq  ;
+					INSERT INTO porcentaje_cumplido (porcent_cumplido,dias_a_la_fecha,total_dias_judiciales_impuestos,prontuario,name_ppl, last_name_ppl,numero_detencion,nombre_crs,fecha_in) VALUES(_porcent,_days_calcule_now,_total_days_judgment,_prontuarioq,_name_pplq,_last_name_pplq,_number_dtq,_name_crsq,_date_inq);				
+					_years_to_days=0; 
+					_months_to_days=0;
+					_days_to_days=0;
+			END LOOP;	 
+  RETURN QUERY SELECT * FROM porcentaje_cumplido;
+ 
+ END IF;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+
+
+SELECT * from  f_calcule_porcentage_allppl_and_get_table(4248) ORDER BY 1 DESC;
+
+SELECT prontuario FROM prison_person  WHERE identificador='1312461096';
+SELECT * from  f_calcule_porcentage_allppl_and_get_table() WHERE prontuario=(SELECT prontuario FROM prison_person  WHERE identificador='1312461096');
+
+SELECT * FROM detention_all WHERE prontuario='MJDHC-A-00033055';
+
+SELECT * from  f_calcule_porcentage_allppl_and_get_table(4248) WHERE prontuario='MJDHC-A-00033055';
+
+
+SELECT prontuario, Count(prontuario) FROM f_calcule_porcentage_allppl_and_get_table() GROUP BY prontuario HAVING Count(prontuario)>1;
+
+
+
+
+
+
+
+
+
+
+
+

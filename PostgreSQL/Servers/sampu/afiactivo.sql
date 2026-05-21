@@ -1,0 +1,1 @@
+SELECT * FROM afi_activo WHERE ide_afact IN (22771,21418)

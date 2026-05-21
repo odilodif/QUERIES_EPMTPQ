@@ -1,0 +1,1 @@
+select * from ir_act_window where id=182
