@@ -1,0 +1,1 @@
+SELECT id, 'Codigo: '|| id || '  Nro.ODT: ' ||COALESCE( NUMBER_ORDER ,0)  || '  Fecha-OT: '|| start_date || ' OBS: ' ||SUBSTRING (description, 1, 15)||'...'   FROM maint_work_order
