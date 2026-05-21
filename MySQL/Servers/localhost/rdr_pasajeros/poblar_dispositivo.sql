@@ -1,0 +1,1 @@
+select distinct usuario as descripcion_disptv   from qr 
