@@ -1,0 +1,8 @@
+/**************************************QUERY  INVENTARIO ACTUAL***************************************************************************/
+SELECT  inventario.ide_boinv, inventario.ide_bocam, catalogo.cat_codigo_bocam, catalogo.descripcion_bocam,  unidad_medida.detalle_bounm as unidad_medida,  presentacion.detalle_bounm as presentacion, inventario.ide_boubi,   inventario.cantidad_inicial_boinv, inventario.costo_inicial_boinv,   inventario.cantidad_ingreso_boinv, inventario.costo_ingreso_boinv,  inventario.cantidad_ingreso_t_boinv, inventario.costo_ingreso_t_boinv,  inventario.cantidad_egreso_boinv, inventario.costo_egreso_boinv,  inventario.cantidad_egreso_t_boinv, inventario.costo_egreso_t_boinv,    inventario.cantidad_egreso_baja_boinv, inventario.costo_egreso_baja_boinv, inventario.cantidad_saldo_boinv, inventario.costo_saldo_boinv,  resumen.pmp_existencia_inres 
+FROM   bodt_bodega_inventario AS inventario  
+LEFT JOIN bodt_inventario_resumen AS resumen  ON inventario.ide_geani = resumen.ide_geani AND      inventario.ide_bocam = resumen.ide_bocam  
+LEFT JOIN bodt_catalogo_material AS catalogo  ON inventario.ide_bocam = catalogo.ide_bocam   
+LEFT JOIN bodt_unidad_medida as unidad_medida on catalogo.ide_bounm = unidad_medida.ide_bounm  
+LEFT JOIN bodt_unidad_medida as presentacion on catalogo.ide_bounm_presentacion=presentacion.ide_bounm 
+WHERE   inventario.ide_geani = 9 AND inventario.ide_boubi = 8 and inventario.ide_bocam = 9819 

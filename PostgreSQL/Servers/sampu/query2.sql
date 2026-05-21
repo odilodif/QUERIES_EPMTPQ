@@ -1,0 +1,1 @@
+(SELECT ' CODIGO: ' || maint_cost_center1.code || ' NOMBRE: ' || maint_cost_center1.name || ' PLACA: ' || COALESCE (maint_cost_center1.plate,' ') ||' CHASIS: ' ||	COALESCE (maint_cost_center1.chassis_code,' ')  FROM maint_cost_center maint_cost_center1  WHERE maint_cost_center1.id = ingreso.id_maint_cost_center )  AS center_cost

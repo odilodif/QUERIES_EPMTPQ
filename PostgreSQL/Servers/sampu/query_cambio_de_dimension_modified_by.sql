@@ -1,0 +1,1 @@
+ALTER TABLE maint_work_order ALTER COLUMN modified_by TYPE varchar(20);
