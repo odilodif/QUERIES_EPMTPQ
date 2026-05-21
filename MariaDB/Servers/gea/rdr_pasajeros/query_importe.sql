@@ -1,0 +1,1 @@
+SELECT DISTINCT importe from qr
